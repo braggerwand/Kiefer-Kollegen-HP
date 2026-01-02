@@ -42,8 +42,8 @@ const Hero = () => (
         </h3>
       </div>
       
-      <div className="pt-10">
-        <button className="px-10 py-4 text-lg font-bold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-full shadow-[0_0_30px_rgba(59,130,246,0.3)] transform transition hover:scale-105 active:scale-95 text-white">
+      <div className="pt-10 flex flex-col items-center gap-14">
+        <button className="px-20 py-8 text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-full shadow-[0_0_50px_rgba(59,130,246,0.4)] transform transition hover:scale-105 active:scale-95 text-white tracking-wide">
           Kontakt
         </button>
       </div>
