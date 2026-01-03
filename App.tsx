@@ -508,9 +508,9 @@ const UeberUnsPage = ({ setView }: { setView: (v: View) => void }) => {
                     href={field.footerLink.url} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-blue-800 hover:text-blue-700 font-bold transition-all group"
+                    className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 font-bold transition-all group"
                   >
-                    <span className="border-b-2 border-blue-800/30 group-hover:border-blue-700 transition-all">
+                    <span className="border-b-2 border-blue-400/30 group-hover:border-blue-300 transition-all">
                       {field.footerLink.text}
                     </span>
                     <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
