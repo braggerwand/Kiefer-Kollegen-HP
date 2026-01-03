@@ -27,6 +27,8 @@ interface ExpertiseField {
   items?: ExpertiseItem[];
   ctaImage?: string;
   ctaLink?: string;
+  isHighlight?: boolean;
+  footerLink?: { text: string; url: string };
 }
 
 // --- Komponenten ---
@@ -271,7 +273,12 @@ const UeberUnsPage = ({ setView }: { setView: (v: View) => void }) => {
         { text: "Portfoliobewertung" }
       ]
     },
-    { title: "Aus- und Weiterbildung", text: "Durch unsere Mitgliedschaften unterliegen unsere Gutachter eine ständigen Weiterbildungsverpflichtung. Alle Mitarbeiter werden ständig intern und extern aus- und weitergebildet (lifetime learning)." }
+    { 
+      title: "Aus- und Weiterbildung", 
+      isHighlight: true,
+      text: "Qualitätssicherung durch lebenslanges Lernen:\n\nUnsere Gutachter unterliegen aufgrund ihrer Mitgliedschaften und Bestellungen einer strengen, kontinuierlichen Weiterbildungsverpflichtung.\n\nDurch regelmäßige interne Schulungen sowie hochkarätige externer Weiterbildung garantieren wir Ergebnisse auf höchstem fachlichem Niveau – stets aktuell, rechtssicher und am Puls der Marktentwicklung (Lifelong Learning).",
+      footerLink: { text: "Wir bilden aus", url: "https://www.immokaufleute.de/" }
+    }
   ];
 
   return (
@@ -372,49 +379,77 @@ const UeberUnsPage = ({ setView }: { setView: (v: View) => void }) => {
       {/* Expertise Sektion */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {expertiseFields.map((field, idx) => (
-          <div key={idx} className="bg-slate-900/30 border border-slate-800/60 p-10 rounded-3xl hover:border-blue-500/30 transition-all group">
-            <h3 className="text-xl font-bold text-white mb-6 group-hover:text-blue-400 transition-colors">{field.title}</h3>
-            <div className="bg-slate-950/50 rounded-2xl p-8 md:p-12 border border-slate-800 min-h-[500px] shadow-inner overflow-y-auto">
-              {field.items ? (
-                /* Liste für Items - Einspaltiges, optimiertes Layout */
-                <div className="grid gap-4 grid-cols-1">
-                  {field.items.map((item, iIdx) => {
-                    const isLink = !!item.link;
-                    const Component = isLink ? 'a' : 'div';
-                    const linkProps = isLink ? { href: item.link, target: "_blank", rel: "noopener noreferrer" } : {};
-                    
-                    return (
-                      <Component 
-                        key={iIdx} 
-                        {...linkProps}
-                        className={`p-6 bg-slate-900/40 border border-slate-800/60 rounded-2xl transition-all shadow-lg flex items-center gap-6 ${isLink ? 'hover:border-blue-500/40 hover:bg-slate-900/60 group/item' : 'hover:border-slate-700/60'}`}
-                      >
-                        {/* Vertikaler Indikator */}
-                        <div className={`w-1 self-stretch rounded-full transition-all ${isLink ? 'bg-blue-600/40 group-hover/item:bg-blue-500' : 'bg-slate-700'}`} />
-                        
-                        <div className="flex-1">
-                          <p className={`text-slate-300 text-sm md:text-base leading-relaxed transition-colors ${isLink ? 'group-hover/item:text-white font-medium' : 'font-light'}`}>
-                            {item.text}
-                          </p>
-                          {isLink && (
-                            <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-blue-400 group-hover/item:text-blue-300 mt-2">
-                              <span>Zur Website</span>
-                              <svg className="w-3 h-3 transition-transform group-hover/item:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                              </svg>
-                            </div>
-                          )}
-                        </div>
-                      </Component>
-                    );
-                  })}
+          <div key={idx} className={`bg-slate-900/30 border ${field.isHighlight ? 'border-blue-900/40 bg-blue-900/5' : 'border-slate-800/60'} p-10 rounded-3xl hover:border-blue-500/30 transition-all group relative overflow-hidden`}>
+            {field.isHighlight && (
+              <div className="absolute top-0 right-0 p-4">
+                <div className="bg-blue-900/40 text-blue-300 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-blue-800">
+                  Qualitätsgarantie
                 </div>
-              ) : (
-                field.text && field.text.split('\n\n').map((paragraph, pIdx) => (
-                  <p key={pIdx} className="text-slate-400 leading-relaxed italic md:text-lg mb-6 last:mb-0">
-                    {paragraph}
-                  </p>
-                ))
+              </div>
+            )}
+            <h3 className="text-xl font-bold text-white mb-6 group-hover:text-blue-400 transition-colors">{field.title}</h3>
+            <div className={`bg-slate-950/50 rounded-2xl p-8 md:p-12 border ${field.isHighlight ? 'border-blue-900/20' : 'border-slate-800'} min-h-[500px] shadow-inner overflow-y-auto flex flex-col`}>
+              <div className="flex-1">
+                {field.items ? (
+                  /* Liste für Items - Einspaltiges, optimiertes Layout */
+                  <div className="grid gap-4 grid-cols-1">
+                    {field.items.map((item, iIdx) => {
+                      const isLink = !!item.link;
+                      const Component = isLink ? 'a' : 'div';
+                      const linkProps = isLink ? { href: item.link, target: "_blank", rel: "noopener noreferrer" } : {};
+                      
+                      return (
+                        <Component 
+                          key={iIdx} 
+                          {...linkProps}
+                          className={`p-6 bg-slate-900/40 border border-slate-800/60 rounded-2xl transition-all shadow-lg flex items-center gap-6 ${isLink ? 'hover:border-blue-500/40 hover:bg-slate-900/60 group/item' : 'hover:border-slate-700/60'}`}
+                        >
+                          {/* Vertikaler Indikator */}
+                          <div className={`w-1 self-stretch rounded-full transition-all ${isLink ? 'bg-blue-800/60 group-hover/item:bg-blue-700' : 'bg-blue-900'}`} />
+                          
+                          <div className="flex-1">
+                            <p className={`text-slate-300 text-sm md:text-base leading-relaxed transition-colors ${isLink ? 'group-hover/item:text-white font-medium' : 'font-light'}`}>
+                              {item.text}
+                            </p>
+                            {isLink && (
+                              <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-blue-400 group-hover/item:text-blue-300 mt-2">
+                                <span>Zur Website</span>
+                                <svg className="w-3 h-3 transition-transform group-hover/item:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                </svg>
+                              </div>
+                            )}
+                          </div>
+                        </Component>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  field.text && field.text.split('\n\n').map((paragraph, pIdx) => (
+                    <p key={pIdx} className={`${field.isHighlight && pIdx === 0 ? 'text-blue-600 font-bold text-xl mb-8 border-b border-blue-900/20 pb-6' : 'text-blue-800 italic md:text-lg mb-6 last:mb-0'} leading-relaxed`}>
+                      {paragraph}
+                    </p>
+                  ))
+                )}
+              </div>
+              
+              {/* Footer Link (z.B. für "Wir bilden aus") */}
+              {field.footerLink && (
+                <div className="mt-8 pt-6 border-t border-blue-900/20">
+                  <a 
+                    href={field.footerLink.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-blue-800 hover:text-blue-700 font-bold transition-all group"
+                  >
+                    <span className="border-b-2 border-blue-800/30 group-hover:border-blue-700 transition-all">
+                      {field.footerLink.text}
+                    </span>
+                    <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </a>
+                </div>
               )}
               
               {field.ctaImage && field.ctaLink && (
