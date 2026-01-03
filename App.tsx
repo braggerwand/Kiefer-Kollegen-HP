@@ -31,6 +31,21 @@ interface ExpertiseField {
   footerLink?: { text: string; url: string };
 }
 
+// --- Hilfsfunktionen ---
+
+const openUploadPopup = () => {
+  const width = 1024;
+  const height = 768;
+  const left = (window.screen.width / 2) - (width / 2);
+  const top = (window.screen.height / 2) - (height / 2);
+  
+  window.open(
+    'https://webportal.teamdrive.net/',
+    'TeamDriveUpload',
+    `width=${width},height=${height},top=${top},left=${left},scrollbars=yes,resizable=yes`
+  );
+};
+
 // --- Komponenten ---
 
 const HeaderButtons = ({ setView }: { setView: (v: View) => void }) => (
@@ -85,7 +100,7 @@ const Hero = ({ onOpenContact }: { onOpenContact: () => void }) => (
   </section>
 );
 
-const ContactOverlay = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
+const ModalOverlay = ({ isOpen, onClose, title, url }: { isOpen: boolean, onClose: () => void, title: string, url: string }) => {
   if (!isOpen) return null;
 
   return (
@@ -106,7 +121,7 @@ const ContactOverlay = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => v
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
               </svg>
             </span>
-            Kontaktanfrage
+            {title}
           </h2>
           <button 
             onClick={onClose}
@@ -121,9 +136,9 @@ const ContactOverlay = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => v
         {/* Content (Iframe) */}
         <div className="flex-1 w-full bg-white relative">
           <iframe 
-            src="https://form.typeform.com/to/I3UTiANj" 
+            src={url} 
             className="w-full h-full border-none"
-            title="Kontaktformular"
+            title={title}
           />
         </div>
       </div>
@@ -299,14 +314,12 @@ const DokumentenVerwaltungPage = ({ setView }: { setView: (v: View) => void }) =
           Nutzen Sie deshalb unser gesichertes Tool mir dem Sie uns Ihre Dateien sicher und einfach zur Verfügung stellen können:
         </p>
         
-        <a 
-          href="https://teamdrive.com/"
-          target="_blank"
-          rel="noopener noreferrer"
+        <button 
+          onClick={openUploadPopup}
           className="inline-block px-12 py-5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-2xl shadow-xl shadow-blue-900/40 transition-all transform hover:scale-105 active:scale-95"
         >
-          Dokumentenupload starten
-        </a>
+          Dokumenten-UpLoad starten
+        </button>
       </div>
     </div>
   </div>
@@ -711,7 +724,7 @@ const App: React.FC = () => {
     window.scrollTo(0, 0);
   }, [currentView]);
 
-  // Schließt Overlay beim View-Wechsel
+  // Schließt Overlays beim View-Wechsel
   useEffect(() => {
     if (isContactOpen) setIsContactOpen(false);
   }, [currentView]);
@@ -817,12 +830,19 @@ const App: React.FC = () => {
       {currentView === 'impressum' && <ImpressumPage setView={setCurrentView} />}
       {currentView === 'datenschutz' && <DatenschutzPage setView={setCurrentView} />}
       {currentView === 'ueber-uns' && <UeberUnsPage setView={setCurrentView} />}
-      {currentView === 'dokumenten-verwaltung' && <DokumentenVerwaltungPage setView={setCurrentView} />}
+      {currentView === 'dokumenten-verwaltung' && (
+        <DokumentenVerwaltungPage setView={setCurrentView} />
+      )}
 
       <Footer setView={setCurrentView} />
 
       {/* Kontakt Overlay */}
-      <ContactOverlay isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />
+      <ModalOverlay 
+        isOpen={isContactOpen} 
+        onClose={() => setIsContactOpen(false)} 
+        title="Kontaktanfrage"
+        url="https://form.typeform.com/to/I3UTiANj"
+      />
     </div>
   );
 };
