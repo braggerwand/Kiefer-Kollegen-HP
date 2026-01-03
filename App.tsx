@@ -50,7 +50,7 @@ const HeaderButtons = ({ setView }: { setView: (v: View) => void }) => (
   </div>
 );
 
-const Hero = () => (
+const Hero = ({ onOpenContact }: { onOpenContact: () => void }) => (
   <section className="relative h-screen w-full flex flex-col items-center justify-center text-center px-4 overflow-hidden">
     {/* Hintergrundbild Rosenheim */}
     <div 
@@ -74,13 +74,62 @@ const Hero = () => (
       </div>
       
       <div className="pt-10 flex flex-col items-center">
-        <button className="px-20 py-8 text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-full shadow-[0_0_50px_rgba(59,130,246,0.4)] transform transition hover:scale-105 active:scale-95 text-white tracking-wide">
+        <button 
+          onClick={onOpenContact}
+          className="px-20 py-8 text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-full shadow-[0_0_50px_rgba(59,130,246,0.4)] transform transition hover:scale-105 active:scale-95 text-white tracking-wide"
+        >
           Kontakt
         </button>
       </div>
     </div>
   </section>
 );
+
+const ContactOverlay = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10 animate-fade-in">
+      {/* Backdrop */}
+      <div 
+        className="absolute inset-0 bg-slate-950/90 backdrop-blur-xl transition-opacity"
+        onClick={onClose}
+      />
+      
+      {/* Container - Verkleinert um 25% (w-3/4 h-3/4) */}
+      <div className="relative w-3/4 h-3/4 max-w-4xl bg-slate-900 border border-slate-800 rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col transform transition-all">
+        {/* Header */}
+        <div className="flex items-center justify-between px-8 py-4 border-b border-slate-800 bg-slate-900/50 backdrop-blur-md">
+          <h2 className="text-xl font-bold text-white flex items-center gap-3">
+            <span className="w-8 h-8 rounded-lg bg-blue-600/20 flex items-center justify-center">
+              <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+              </svg>
+            </span>
+            Kontaktanfrage
+          </h2>
+          <button 
+            onClick={onClose}
+            className="p-2 hover:bg-white/10 rounded-full transition-colors text-slate-400 hover:text-white"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Content (Iframe) */}
+        <div className="flex-1 w-full bg-white relative">
+          <iframe 
+            src="https://form.typeform.com/to/I3UTiANj" 
+            className="w-full h-full border-none"
+            title="Kontaktformular"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 interface ServiceCardProps {
   title: string;
@@ -344,7 +393,7 @@ const UeberUnsPage = ({ setView }: { setView: (v: View) => void }) => {
     { 
       title: "Aus- und Weiterbildung", 
       isHighlight: true,
-      text: "Qualitätssicherung durch lebenslanges Lernen:\n\nUnsere Gutachter unterliegen aufgrund ihrer Mitgliedschaften and Bestellungen einer strengen, kontinuierlichen Weiterbildungsverpflichtung.\n\nDurch regelmäßige interne Schulungen sowie hochkarätige externer Weiterbildung garantieren wir Ergebnisse auf höchstem fachlichem Niveau – stets aktuell, rechtssicher und am Puls der Marktentwicklung (Lifelong Learning).",
+      text: "Qualitätssicherung durch lebenslanges Lernen:\n\nUnsere Gutachter unterliegen aufgrund ihrer Mitgliedschaften and Bestellungen einer strengen, kontinuierlichen Weiterbildungsverpflichtung.\n\nDurch regelmäßige interne Schulungen sowie hochkarätige externer Weiterbildung garantieren wir Ergebnisse auf höchstem fachlichem Niveau – stets aktuell, rechtssicher and am Puls der Marktentwicklung (Lifelong Learning).",
       footerLink: { text: "Wir bilden aus", url: "https://www.immokaufleute.de/" }
     }
   ];
@@ -656,9 +705,15 @@ const DatenschutzPage = ({ setView }: { setView: (v: View) => void }) => (
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<View>('home');
+  const [isContactOpen, setIsContactOpen] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+  }, [currentView]);
+
+  // Schließt Overlay beim View-Wechsel
+  useEffect(() => {
+    if (isContactOpen) setIsContactOpen(false);
   }, [currentView]);
 
   const services = [
@@ -721,7 +776,7 @@ const App: React.FC = () => {
       
       {currentView === 'home' && (
         <>
-          <Hero />
+          <Hero onOpenContact={() => setIsContactOpen(true)} />
           {/* Sektion Dienstleistungen */}
           <section className="py-32 bg-slate-950">
             <div className="container mx-auto px-6">
@@ -765,6 +820,9 @@ const App: React.FC = () => {
       {currentView === 'dokumenten-verwaltung' && <DokumentenVerwaltungPage setView={setCurrentView} />}
 
       <Footer setView={setCurrentView} />
+
+      {/* Kontakt Overlay */}
+      <ContactOverlay isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />
     </div>
   );
 };
