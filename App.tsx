@@ -3,6 +3,32 @@ import React, { useState, useEffect } from 'react';
 // --- Typen ---
 type View = 'home' | 'impressum' | 'datenschutz' | 'ueber-uns';
 
+interface Qualifikation {
+  institution: string;
+  abschluss: string;
+}
+
+interface TeamMember {
+  name: string;
+  suffix?: string;
+  qualifikationen: string | Qualifikation[];
+  imageUrl: string;
+  linkedinUrl?: string;
+}
+
+interface ExpertiseItem {
+  text: string;
+  link?: string;
+}
+
+interface ExpertiseField {
+  title: string;
+  text?: string;
+  items?: ExpertiseItem[];
+  ctaImage?: string;
+  ctaLink?: string;
+}
+
 // --- Komponenten ---
 
 const HeaderButtons = ({ setView }: { setView: (v: View) => void }) => (
@@ -31,7 +57,7 @@ const Hero = () => (
 
     <div className="relative z-10 max-w-5xl space-y-8">
       <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-white mb-4 animate-fade-in text-glow">
-        Kiefer & Kollegen
+        Kiefer <span className="text-blue-500">&</span> Kollegen
       </h1>
       <div className="space-y-4">
         <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold text-blue-400">
@@ -42,7 +68,7 @@ const Hero = () => (
         </h3>
       </div>
       
-      <div className="pt-10 flex flex-col items-center gap-14">
+      <div className="pt-10 flex flex-col items-center">
         <button className="px-20 py-8 text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-full shadow-[0_0_50px_rgba(59,130,246,0.4)] transform transition hover:scale-105 active:scale-95 text-white tracking-wide">
           Kontakt
         </button>
@@ -56,18 +82,27 @@ interface ServiceCardProps {
 }
 
 const ServiceCard: React.FC<ServiceCardProps> = ({ title }) => (
-  <div className="bg-slate-900/40 border border-slate-800/60 p-6 md:p-8 rounded-3xl backdrop-blur-sm flex flex-col h-full hover:border-blue-500/40 hover:-translate-y-2 transition-all duration-300 group relative overflow-hidden">
+  <div className="bg-slate-900/30 border border-slate-800/50 p-7 md:p-9 rounded-[2rem] backdrop-blur-md flex flex-col h-full hover:border-blue-500/50 hover:bg-slate-900/50 hover:-translate-y-2 transition-all duration-500 group relative overflow-hidden">
+    {/* Subtiler Background-Glow */}
+    <div className="absolute -top-24 -right-24 w-48 h-48 bg-blue-600/5 blur-[80px] group-hover:bg-blue-600/10 transition-all duration-500 rounded-full" />
+    
     <div className="relative z-10 flex flex-col h-full">
-      <div className="w-12 h-1 bg-gradient-to-r from-blue-600 to-transparent mb-6 rounded-full" />
-      <h4 className="text-lg md:text-xl font-bold text-white mb-8 group-hover:text-blue-400 transition-colors leading-tight">
+      {/* Indikator-Icon/Linie */}
+      <div className="flex items-center gap-3 mb-8">
+        <div className="w-10 h-[2px] bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full" />
+        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-500/80">Expertise</span>
+      </div>
+      
+      <h4 className="text-xl md:text-2xl font-bold text-white mb-10 group-hover:text-blue-300 transition-colors leading-[1.3] [hyphens:auto] [word-break:break-word] tracking-tight">
         {title}
       </h4>
-      <div className="mt-auto flex flex-col sm:flex-row gap-3">
-        <button className="flex-1 py-3 px-4 text-[10px] font-bold uppercase tracking-widest bg-white/5 hover:bg-white/10 text-white rounded-xl border border-white/10 transition-all">
-          Mehr erfahren
+      
+      <div className="mt-auto pt-6 border-t border-slate-800/50 flex flex-col sm:flex-row gap-3">
+        <button className="flex-1 py-3 px-4 text-[11px] font-bold uppercase tracking-wider bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white rounded-xl border border-white/5 transition-all">
+          Details
         </button>
-        <button className="flex-1 py-3 px-4 text-[10px] font-bold uppercase tracking-widest bg-gradient-to-r from-blue-600 to-indigo-600 hover:shadow-[0_0_15px_rgba(37,99,235,0.4)] text-white rounded-xl transition-all">
-          Kontakt
+        <button className="flex-1 py-3 px-4 text-[11px] font-bold uppercase tracking-wider bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-500 hover:to-indigo-600 text-white rounded-xl shadow-lg shadow-blue-900/20 transition-all">
+          Anfragen
         </button>
       </div>
     </div>
@@ -105,10 +140,10 @@ const Footer = ({ setView }: { setView: (v: View) => void }) => (
         <div>
           <h5 className="text-xl font-bold text-white mb-6">Wie Sie uns finden</h5>
           <p className="text-slate-400 leading-relaxed">
-            Max-Josefs-Platz 1<br />
+            Max Josefs Platz 2<br />
             83022 Rosenheim<br />
             <a 
-              href="https://www.google.com/maps/dir/?api=1&destination=Max-Josefs-Platz+1,+83022+Rosenheim" 
+              href="https://www.google.com/maps/dir/?api=1&destination=Max+Josefs+Platz+2,+83022+Rosenheim" 
               target="_blank" 
               rel="noopener noreferrer"
               className="text-sky-400 hover:text-sky-300 transition-colors inline-flex items-center gap-1 mt-2"
@@ -150,7 +185,7 @@ const Footer = ({ setView }: { setView: (v: View) => void }) => (
         </div>
       </div>
       <div className="text-center text-slate-600 text-xs border-t border-slate-900 pt-10 tracking-widest uppercase">
-        &copy; {new Date().getFullYear()} Kiefer & Kollegen. Alle Rechte vorbehalten.
+        &copy; {new Date().getFullYear()} Kiefer <span className="text-blue-500/80">&</span> Kollegen. Alle Rechte vorbehalten.
       </div>
     </div>
   </footer>
@@ -159,30 +194,84 @@ const Footer = ({ setView }: { setView: (v: View) => void }) => (
 // --- Inhaltsseiten ---
 
 const UeberUnsPage = ({ setView }: { setView: (v: View) => void }) => {
-  const teamMembers = [
+  const teamMembers: TeamMember[] = [
     { 
       name: "Michael Kiefer", 
       suffix: "frics",
-      qualifikationen: "Diplom-Sachverständiger (DIA), öffentlich bestellt und vereidigt von der IHK München und Oberbayern. Langjährige Expertise in der Bewertung komplexer Gewerbeimmobilien und Portfolien.",
-      imageUrl: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=600&h=600"
+      linkedinUrl: "https://www.linkedin.com/in/michael-kiefer-frics-04a87325/",
+      qualifikationen: [
+        { 
+          institution: "Hochschule für Wirtschaft, Zürich", 
+          abschluss: "Master of Real Estate Management (MREM), Immobilienwirtschaft" 
+        },
+        { 
+          institution: "DIA Deutsche Immobilienakademie an der Universität Freiburg, Freiburg", 
+          abschluss: "Dipl. Sachverständiger für Immobilienbewertung (DIA), Immobilienbewertung" 
+        },
+        { 
+          institution: "EBS Universität für Wirtschaft & Recht, Berlin", 
+          abschluss: "Immobilienökonom (EBS), Immobilienwirtschaft" 
+        },
+        { 
+          institution: "Akademie der Industrie- & Handelskammer, München", 
+          abschluss: "Energiemanager (IHK), Energieberatung" 
+        }
+      ],
+      imageUrl: "https://www.svkiefer.de/include/img/team/Michael_Kiefer_Sachverstaendiger_Immobilienbewertung.jpg"
     },
     { 
       name: "Luisa Junge", 
-      qualifikationen: "M.Sc. Real Estate Management, spezialisiert auf Markt- und Beleihungswertermittlung. Expertise in der Bewertung von Wohnimmobilien und nachhaltigen Gebäudekonzepten.",
+      linkedinUrl: "https://www.linkedin.com/in/luisa-maria-junge-8a8809290/",
+      qualifikationen: [
+        { 
+          institution: "DIA Deutsche Immobilienakademie an der Universität Freiburg, Freiburg", 
+          abschluss: "Dipl. Sachverständige für Immobilienbewertung (DIA), Immobilienwirtschaft" 
+        },
+        { 
+          institution: "IU International University of Applied Sciences, München", 
+          abschluss: "Bachelor of Arts (B.A.), Immobilienwirtschaft" 
+        }
+      ],
       imageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=600&h=600"
     },
     { 
       name: "Unser Team", 
-      qualifikationen: "Qualifizierte Rechercheure und Backoffice-Spezialisten für präzise Marktanalysen. Wir arbeiten interdisziplinär, um höchste Gutachtenqualität zu garantieren.",
+      qualifikationen: "Unser Team besteht aus qualifizierten Gutachtern und hervorragend ausgebildeten Fachkräften mit langjähriger Berufserfahrung.",
       imageUrl: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=600&h=600"
     }
   ];
 
-  const expertiseFields = [
-    { title: "Öffentliche Bestellung und Vereidigung", text: "Die öffentliche Bestellung und vereidigung durch die IHK bürgt für besondere Sachkunde sowie Objektivität und Neutralität. Dies ist insbesondere bei gerichtlichen Auseinandersetzungen und steuerlichen Bewertungen von entscheidender Bedeutung." },
-    { title: "Mitgliedschaften", text: "Wir sind aktiv vernetzt in führenden Verbänden wie RICS (Royal Institution of Chartered Surveyors) und regionalen Gremien. Dies ermöglicht uns den Zugriff auf exklusive Marktdaten und internationale Bewertungsstandards." },
-    { title: "Spezialgebiete", text: "Schwerpunkte in der Bewertung von Wohn-, Gewerbe- und Sonderimmobilien sowie landwirtschaftlichen Flächen in Oberbayern. Wir decken das gesamte Spektrum von der Einzimmerwohnung bis hin zum Industriekomplex ab." },
-    { title: "Aus- und Weiterbildung", text: "Kontinuierliche Fortbildung sichert die Berücksichtigung aktuellster Rechtsprechungen und Markttrends in unseren Gutachten. Wir investieren jährlich signifikant in die Weiterentwicklung unserer Fachexpertise." }
+  const expertiseFields: ExpertiseField[] = [
+    { 
+      title: "Öffentliche Bestellung und Vereidigung", 
+      text: "Die öffentliche Bestellung und Vereidigung ist ein staatlich geschütztes Gütesiegel, das eine überdurchschnittliche fachliche Expertise bescheinigt. Michael Kiefer wurde von der IHK für München und Oberbayern nach einem anspruchsvollen Prüfungsverfahren für das Fachgebiet der Immobilienbewertung berufen.\n\nEin Kernaspekt dieser Bestellung ist die absolute Neutralität und Objektivität. Als öffentlich bestellter und vereidigter Sachverständiger ist er gesetzlich dazu verpflichtet, Gutachten unparteiisch and nach bestem Wissen und Gewissen zu erstellen, was ein Höchstmaß an Verlässlichkeit garantiert.\n\nDie von uns erstellten Gutachten genießen bei Gerichten, Finanzämtern und Kreditinstituten eine besondere Glaubwürdigkeit. Sie bilden die rechtssichere Grundlage für Erbschaftsangelegenheiten, steuerliche Bewertungen oder gerichtliche Auseinandersetzungen.\n\nUm diesen hohen Standard dauerhaft zu sichern, unterliegen wir einer ständigen Aufsicht durch die Bestellungskörperschaft. Dies umfasst die regelmäßige Überprüfung der Gutachtenqualität sowie die Verpflichtung zu kontinuierlicher fachlicher Weiterbildung.",
+      ctaImage: "https://svv.ihk.de/blueprint/servlet/resource/crblob/5972434/2859fbc4e02a16c35663e5a6173c6c21/logo-svw-ohne-logos-data.png",
+      ctaLink: "https://svv.ihk.de/svw-suche/4931566/suche-extern"
+    },
+    { 
+      title: "Mitgliedschaften", 
+      items: [
+        { text: "Michael Kiefer ist langjähriges Mitglied im Gutachterausschuss für Grundstückswerte im Landratsamt Rosenheim", link: "https://www.landkreis-rosenheim.de/bauen/" },
+        { text: "Michael Kiefer ist langjähriges Mitglied im Gutachterausschuss für Grundstückswerte in der kreisfeien Stadt Rosenheim", link: "https://www.rosenheim.de/buergerservice/planen-bauen/gutachterausschuss-aufgaben-befugnisse/" },
+        { text: "Michael Kiefer ist langjährige Mitglied im Umlegungsausschuss der kreisfreien Stadt Rosenheim", link: "https://www.rosenheim.de/buergerservice/planen-bauen/umlegungsausschuss/" },
+        { text: "Wir sind Mitglied im Landesverband Bayern öffentlich bestellter und vereidigter Sachverständiger (LVS Bayern e.V.)", link: "https://www.lvs-bayern.de/verzeichnis/" }
+      ]
+    },
+    { 
+      title: "Spezialgebiete", 
+      items: [
+        { text: "Bewertung von Beherbergungs- & Gastronomieimmobilien" },
+        { text: "Bewertung von Sozialimmobillien (Alten- und Pflegeheime)" },
+        { text: "Bewertung von Krankenhaus-Immobilien" },
+        { text: "Bewertung von Immobilien der Landwirtschaft (Hofstellen, Grünland, Ackerflächen, Unland)" },
+        { text: "Bewertung von Immobilien der öffenlichen Hand" },
+        { text: "Bewertung von Nichtbauland (Begünstigtes Agrarland, Bauerwartungsland)" },
+        { text: "Bewertung von Bauerwartungsland nach der Residualwert-Methode (Bauträgerkalkulation)" },
+        { text: "Bewertung von betrieblichen Immobilien (Produktion, Industrie, Logistik)" },
+        { text: "Portfoliobewertung" }
+      ]
+    },
+    { title: "Aus- und Weiterbildung", text: "Durch unsere Mitgliedschaften unterliegen unsere Gutachter eine ständigen Weiterbildungsverpflichtung. Alle Mitarbeiter werden ständig intern und extern aus- und weitergebildet (lifetime learning)." }
   ];
 
   return (
@@ -203,31 +292,75 @@ const UeberUnsPage = ({ setView }: { setView: (v: View) => void }) => {
       </div>
 
       {/* Team Sektion */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-24">
+      <div className="flex flex-col gap-24 mb-24">
         {teamMembers.map((member, idx) => (
-          <div key={idx} className="bg-slate-900/50 border border-slate-800 p-8 md:p-12 rounded-3xl backdrop-blur-sm flex flex-col items-center text-center">
-            <div className="relative mb-10">
-              <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full scale-125" />
+          <div key={idx} className={`flex flex-col ${idx % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} bg-slate-900/40 border border-slate-800/60 rounded-[3rem] overflow-hidden backdrop-blur-md shadow-2xl`}>
+            {/* Bildbereich */}
+            <div className="lg:w-1/3 relative min-h-[400px]">
               <img 
                 src={member.imageUrl} 
                 alt={member.name} 
-                className="relative w-64 h-64 md:w-72 md:h-72 object-cover rounded-3xl border-2 border-slate-700 shadow-2xl transition-transform duration-500 hover:scale-[1.02]"
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-110 grayscale hover:grayscale-0"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-60" />
             </div>
-            <h3 className="text-2xl md:text-3xl font-bold text-white mb-8 tracking-tight flex items-baseline gap-2">
-              {member.name} 
-              {member.suffix && (
-                <span className="text-[0.5em] font-medium lowercase text-blue-400/80">
-                  {member.suffix}
-                </span>
-              )}
-            </h3>
-            <div className="w-full text-left mt-4 border-t border-slate-800/80 pt-10">
-              <h4 className="text-xs font-bold text-blue-500 uppercase tracking-widest mb-6">Qualifikationen</h4>
-              <div className="bg-slate-950/60 rounded-2xl p-6 md:p-8 border border-slate-800 min-h-[250px] shadow-inner">
-                <p className="text-slate-300 leading-relaxed text-sm md:text-base italic">
-                  {member.qualifikationen}
-                </p>
+            
+            {/* Inhaltsbereich */}
+            <div className="lg:w-2/3 p-8 md:p-12 lg:p-16 flex flex-col justify-center">
+              <div className="flex flex-wrap items-center justify-between gap-6 mb-8">
+                <h3 className="text-3xl md:text-5xl font-bold text-white tracking-tight flex items-baseline gap-3">
+                  {member.name} 
+                  {member.suffix && (
+                    <span className="text-[0.4em] font-medium lowercase text-blue-400/80 px-3 py-1 bg-blue-500/10 rounded-full border border-blue-500/20">
+                      {member.suffix}
+                    </span>
+                  )}
+                </h3>
+                
+                {member.linkedinUrl && (
+                  <a 
+                    href={member.linkedinUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="group/ln flex items-center justify-center w-12 h-12 bg-[#0077b5]/10 hover:bg-[#0077b5] border border-[#0077b5]/30 rounded-xl transition-all duration-300"
+                    title="LinkedIn Profil"
+                  >
+                    <svg className="w-6 h-6 fill-[#0077b5] group-hover/ln:fill-white transition-colors" viewBox="0 0 24 24">
+                      <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                    </svg>
+                  </a>
+                )}
+              </div>
+              
+              <div className="w-full">
+                <h4 className="text-xs font-bold text-blue-500 uppercase tracking-[0.3em] mb-8 flex items-center gap-4">
+                  Qualifikationen
+                  <div className="flex-1 h-px bg-slate-800" />
+                </h4>
+                
+                {Array.isArray(member.qualifikationen) ? (
+                  /* Spezial-Layout für Array-Qualifikationen (Kacheln) */
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {member.qualifikationen.map((q, qIdx) => (
+                      <div key={qIdx} className="bg-slate-950/80 border border-slate-800 p-6 rounded-2xl hover:border-blue-500/40 transition-all group flex flex-col gap-2 shadow-inner">
+                        <div className="w-6 h-1 bg-blue-600 rounded-full group-hover:w-12 transition-all" />
+                        <h5 className="text-sm font-bold text-white group-hover:text-blue-400 transition-colors leading-tight">
+                          {q.institution}
+                        </h5>
+                        <p className="text-xs text-slate-400 leading-relaxed italic">
+                          {q.abschluss}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  /* Standard-Layout für Fließtext */
+                  <div className="bg-slate-950/60 rounded-3xl p-8 border border-slate-800 shadow-inner">
+                    <p className="text-slate-300 leading-relaxed text-base md:text-lg italic">
+                      {member.qualifikationen}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -241,10 +374,67 @@ const UeberUnsPage = ({ setView }: { setView: (v: View) => void }) => {
         {expertiseFields.map((field, idx) => (
           <div key={idx} className="bg-slate-900/30 border border-slate-800/60 p-10 rounded-3xl hover:border-blue-500/30 transition-all group">
             <h3 className="text-xl font-bold text-white mb-6 group-hover:text-blue-400 transition-colors">{field.title}</h3>
-            <div className="bg-slate-950/50 rounded-2xl p-8 md:p-12 border border-slate-800 min-h-[500px] shadow-inner">
-              <p className="text-slate-400 leading-relaxed italic md:text-lg">
-                {field.text}
-              </p>
+            <div className="bg-slate-950/50 rounded-2xl p-8 md:p-12 border border-slate-800 min-h-[500px] shadow-inner overflow-y-auto">
+              {field.items ? (
+                /* Liste für Items - Einspaltiges, optimiertes Layout */
+                <div className="grid gap-4 grid-cols-1">
+                  {field.items.map((item, iIdx) => {
+                    const isLink = !!item.link;
+                    const Component = isLink ? 'a' : 'div';
+                    const linkProps = isLink ? { href: item.link, target: "_blank", rel: "noopener noreferrer" } : {};
+                    
+                    return (
+                      <Component 
+                        key={iIdx} 
+                        {...linkProps}
+                        className={`p-6 bg-slate-900/40 border border-slate-800/60 rounded-2xl transition-all shadow-lg flex items-center gap-6 ${isLink ? 'hover:border-blue-500/40 hover:bg-slate-900/60 group/item' : 'hover:border-slate-700/60'}`}
+                      >
+                        {/* Vertikaler Indikator */}
+                        <div className={`w-1 self-stretch rounded-full transition-all ${isLink ? 'bg-blue-600/40 group-hover/item:bg-blue-500' : 'bg-slate-700'}`} />
+                        
+                        <div className="flex-1">
+                          <p className={`text-slate-300 text-sm md:text-base leading-relaxed transition-colors ${isLink ? 'group-hover/item:text-white font-medium' : 'font-light'}`}>
+                            {item.text}
+                          </p>
+                          {isLink && (
+                            <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-blue-400 group-hover/item:text-blue-300 mt-2">
+                              <span>Zur Website</span>
+                              <svg className="w-3 h-3 transition-transform group-hover/item:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                              </svg>
+                            </div>
+                          )}
+                        </div>
+                      </Component>
+                    );
+                  })}
+                </div>
+              ) : (
+                field.text && field.text.split('\n\n').map((paragraph, pIdx) => (
+                  <p key={pIdx} className="text-slate-400 leading-relaxed italic md:text-lg mb-6 last:mb-0">
+                    {paragraph}
+                  </p>
+                ))
+              )}
+              
+              {field.ctaImage && field.ctaLink && (
+                <div className="mt-8 pt-6 border-t border-slate-800/40 text-center">
+                  <a 
+                    href={field.ctaLink} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-block group/cta transition-transform hover:scale-105 active:scale-95"
+                  >
+                    <div className="bg-white p-7 rounded-2xl shadow-xl border border-slate-200 hover:shadow-blue-500/20 transition-all">
+                      <img 
+                        src={field.ctaImage} 
+                        alt="IHK Siegel" 
+                        className="h-24 md:h-32 w-auto object-contain brightness-100 transition-all group-hover/cta:brightness-110"
+                      />
+                    </div>
+                  </a>
+                </div>
+              )}
             </div>
           </div>
         ))}
@@ -271,8 +461,8 @@ const ImpressumPage = ({ setView }: { setView: (v: View) => void }) => (
       <section>
         <h2 className="text-xl font-bold text-white mb-4">Angaben gemäß § 5 TMG</h2>
         <p>
-          Kiefer & Kollegen<br />
-          Max-Josefs-Platz 1<br />
+          Michael Kiefer<br />
+          Max Josefs Platz 2<br />
           83022 Rosenheim
         </p>
       </section>
@@ -296,11 +486,8 @@ const ImpressumPage = ({ setView }: { setView: (v: View) => void }) => (
 
       <section>
         <h2 className="text-xl font-bold text-white mb-4">Berufsbezeichnung und berufsrechtliche Regelungen</h2>
-        <p className="mb-4">
-          Berufsbezeichnung: Öffentlich bestellte und vereidigte Sachverständige für Immobilienbewertung
-        </p>
         <p>
-          Zuständige Kammer: Industrie- und Handelskammer für München und Oberbayern
+          Bestellungstenor: Für die Bewertung von bebauten und unbebauten Grundstücken von der Industrie- und Handelskammer für München und Oberbayern öffentliche bestellt und vereidigt
         </p>
       </section>
 
@@ -435,13 +622,13 @@ const App: React.FC = () => {
           {/* Sektion Dienstleistungen */}
           <section className="py-32 bg-slate-950">
             <div className="container mx-auto px-6">
-              <div className="text-center mb-20">
-                <h2 className="text-sm font-bold text-blue-500 uppercase tracking-[0.3em] mb-4">Portfolio</h2>
-                <h3 className="text-3xl md:text-5xl font-extrabold text-white mb-6">Unsere Dienstleistungen</h3>
-                <div className="h-1.5 w-24 bg-gradient-to-r from-blue-600 to-indigo-600 mx-auto rounded-full" />
+              <div className="text-center mb-24">
+                <h2 className="text-sm font-bold text-blue-500 uppercase tracking-[0.4em] mb-6">Portfolio</h2>
+                <h3 className="text-4xl md:text-6xl font-extrabold text-white mb-8 tracking-tight">Unsere Dienstleistungen</h3>
+                <div className="h-1.5 w-32 bg-gradient-to-r from-blue-600 to-indigo-600 mx-auto rounded-full shadow-[0_0_15px_rgba(37,99,235,0.4)]" />
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 max-w-7xl mx-auto">
                 {services.map((service, idx) => (
                   <ServiceCard key={idx} title={service} />
                 ))}
