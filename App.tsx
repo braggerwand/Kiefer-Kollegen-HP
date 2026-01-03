@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 // --- Typen ---
-type View = 'home' | 'impressum' | 'datenschutz' | 'ueber-uns';
+type View = 'home' | 'impressum' | 'datenschutz' | 'ueber-uns' | 'dokumenten-verwaltung';
 
 interface Qualifikation {
   institution: string;
@@ -41,8 +41,11 @@ const HeaderButtons = ({ setView }: { setView: (v: View) => void }) => (
     >
       Über uns
     </button>
-    <button className="px-5 py-2 text-sm font-semibold bg-white/10 hover:bg-white/20 border border-white/20 rounded-full backdrop-blur-md transition-all text-white">
-      Dokumentenverwaltung
+    <button 
+      onClick={() => { setView('dokumenten-verwaltung'); window.scrollTo(0,0); }}
+      className="px-5 py-2 text-sm font-semibold bg-white/10 hover:bg-white/20 border border-white/20 rounded-full backdrop-blur-md transition-all text-white"
+    >
+      Datei-Transfair
     </button>
   </div>
 );
@@ -195,6 +198,71 @@ const Footer = ({ setView }: { setView: (v: View) => void }) => (
 
 // --- Inhaltsseiten ---
 
+const DokumentenVerwaltungPage = ({ setView }: { setView: (v: View) => void }) => (
+  <div className="pt-32 pb-20 px-6 max-w-4xl mx-auto">
+    <button 
+      onClick={() => setView('home')}
+      className="mb-12 flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors font-semibold"
+    >
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+      Zurück zur Startseite
+    </button>
+    
+    <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-10 text-glow">Sicherer Daten-Transfair</h1>
+    
+    <div className="space-y-12 text-slate-300 leading-relaxed text-lg">
+      {/* Roter Warnhinweis */}
+      <div className="bg-red-950/30 border border-red-500/50 p-6 rounded-2xl flex items-start gap-4 shadow-[0_0_20px_rgba(239,68,68,0.1)]">
+        <div className="text-red-500 mt-1">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+        </div>
+        <div>
+          <p className="text-red-400 font-bold">
+            Schicken Sie uns keine Dateien per EMail! Nutzen Sie unser sicheres UpLoad-Tool. Ganz einfach per Drag & Drop.
+          </p>
+        </div>
+      </div>
+
+      <p>
+        Den meisten Menschen ist nicht bewusst, wie unsicher der Versand von sensiblen Informationen und Unterlagen per EMail ist. Mit dem Versand von Dokumenten als Anlage zu einer Email  sind Ihre Daten faktisch ungeschützt!
+      </p>
+      
+      <p>
+        Als öffentlich bestellte und vereidigter Sachverständige sind wir in besonderen Weise dem Datenschutz verpflichtet.
+      </p>
+      
+      <p>
+        Als unser Mandant haben Sie ein berechtigtes Interesse daran,  dass wir mit Ihr Daten und Informationen maximal sensibel und vorsichtig umgehen.
+      </p>
+      
+      <div className="bg-blue-900/20 border border-blue-500/30 p-10 rounded-3xl mt-12 flex flex-col items-center text-center">
+        <div className="w-16 h-16 rounded-2xl bg-blue-500/20 flex items-center justify-center text-blue-400 mb-8">
+          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+        </div>
+        
+        <p className="text-slate-100 mb-10">
+          Nutzen Sie deshalb unser gesichertes Tool mir dem Sie uns Ihre Dateien sicher und einfach zur Verfügung stellen können:
+        </p>
+        
+        <a 
+          href="https://teamdrive.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block px-12 py-5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-2xl shadow-xl shadow-blue-900/40 transition-all transform hover:scale-105 active:scale-95"
+        >
+          Dokumentenupload starten
+        </a>
+      </div>
+    </div>
+  </div>
+);
+
 const UeberUnsPage = ({ setView }: { setView: (v: View) => void }) => {
   const teamMembers: TeamMember[] = [
     { 
@@ -246,7 +314,7 @@ const UeberUnsPage = ({ setView }: { setView: (v: View) => void }) => {
   const expertiseFields: ExpertiseField[] = [
     { 
       title: "Öffentliche Bestellung und Vereidigung", 
-      text: "Die öffentliche Bestellung und Vereidigung ist ein staatlich geschütztes Gütesiegel, das eine überdurchschnittliche fachliche Expertise bescheinigt. Michael Kiefer wurde von der IHK für München und Oberbayern nach einem anspruchsvollen Prüfungsverfahren für das Fachgebiet der Immobilienbewertung berufen.\n\nEin Kernaspekt dieser Bestellung ist die absolute Neutralität und Objektivität. Als öffentlich bestellter und vereidigter Sachverständiger ist er gesetzlich dazu verpflichtet, Gutachten unparteiisch and nach bestem Wissen und Gewissen zu erstellen, was ein Höchstmaß an Verlässlichkeit garantiert.\n\nDie von uns erstellten Gutachten genießen bei Gerichten, Finanzämtern und Kreditinstituten eine besondere Glaubwürdigkeit. Sie bilden die rechtssichere Grundlage für Erbschaftsangelegenheiten, steuerliche Bewertungen oder gerichtliche Auseinandersetzungen.\n\nUm diesen hohen Standard dauerhaft zu sichern, unterliegen wir einer ständigen Aufsicht durch die Bestellungskörperschaft. Dies umfasst die regelmäßige Überprüfung der Gutachtenqualität sowie die Verpflichtung zu kontinuierlicher fachlicher Weiterbildung.",
+      text: "Die öffentliche Bestellung und Vereidigung ist ein staatlich geschütztes Gütesiegel, das eine überdurchschnittliche fachliche Expertise bescheinigt. Michael Kiefer wurde von der IHK für München und Oberbayern nach einem anspruchsvollen Prüvungsverfahren für das Fachgebiet der Immobilienbewertung berufen.\n\nEin Kernaspekt dieser Bestellung ist die absolute Neutralität und Objektivität. Als öffentlich bestellter und vereidigter Sachverständiger ist er gesetzlich dazu verpflichtet, Gutachten unparteiisch and nach bestem Wissen und Gewissen zu erstellen, was ein Höchstmaß an Verlässlichkeit garantiert.\n\nDie von uns erstellten Gutachten genießen bei Gerichten, Finanzämtern und Kreditinstituten eine besondere Glaubwürdigkeit. Sie bilden die rechtssichere Grundlage für Erbschaftsangelegenheiten, steuerliche Bewertungen oder gerichtliche Auseinandersetzungen.\n\nUm diesen hohen Standard dauerhaft zu sichern, unterliegen wir einer ständigen Aufsicht durch die Bestellungskörperschaft. Dies umfasst die regelmäßige Überprüfung der Gutachtenqualität sowie die Verpflichtung zu kontinuierlicher fachlicher Weiterbildung.",
       ctaImage: "https://svv.ihk.de/blueprint/servlet/resource/crblob/5972434/2859fbc4e02a16c35663e5a6173c6c21/logo-svw-ohne-logos-data.png",
       ctaLink: "https://svv.ihk.de/svw-suche/4931566/suche-extern"
     },
@@ -276,7 +344,7 @@ const UeberUnsPage = ({ setView }: { setView: (v: View) => void }) => {
     { 
       title: "Aus- und Weiterbildung", 
       isHighlight: true,
-      text: "Qualitätssicherung durch lebenslanges Lernen:\n\nUnsere Gutachter unterliegen aufgrund ihrer Mitgliedschaften und Bestellungen einer strengen, kontinuierlichen Weiterbildungsverpflichtung.\n\nDurch regelmäßige interne Schulungen sowie hochkarätige externer Weiterbildung garantieren wir Ergebnisse auf höchstem fachlichem Niveau – stets aktuell, rechtssicher und am Puls der Marktentwicklung (Lifelong Learning).",
+      text: "Qualitätssicherung durch lebenslanges Lernen:\n\nUnsere Gutachter unterliegen aufgrund ihrer Mitgliedschaften and Bestellungen einer strengen, kontinuierlichen Weiterbildungsverpflichtung.\n\nDurch regelmäßige interne Schulungen sowie hochkarätige externer Weiterbildung garantieren wir Ergebnisse auf höchstem fachlichem Niveau – stets aktuell, rechtssicher und am Puls der Marktentwicklung (Lifelong Learning).",
       footerLink: { text: "Wir bilden aus", url: "https://www.immokaufleute.de/" }
     }
   ];
@@ -694,6 +762,7 @@ const App: React.FC = () => {
       {currentView === 'impressum' && <ImpressumPage setView={setCurrentView} />}
       {currentView === 'datenschutz' && <DatenschutzPage setView={setCurrentView} />}
       {currentView === 'ueber-uns' && <UeberUnsPage setView={setCurrentView} />}
+      {currentView === 'dokumenten-verwaltung' && <DokumentenVerwaltungPage setView={setCurrentView} />}
 
       <Footer setView={setCurrentView} />
     </div>
