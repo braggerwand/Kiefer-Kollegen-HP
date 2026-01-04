@@ -31,6 +31,11 @@ interface ExpertiseField {
   footerLink?: { text: string; url: string };
 }
 
+interface ServiceItem {
+  title: string;
+  detailsUrl?: string;
+}
+
 // --- Hilfsfunktionen ---
 
 const openUploadPopup = () => {
@@ -39,11 +44,29 @@ const openUploadPopup = () => {
   const left = (window.screen.width / 2) - (width / 2);
   const top = (window.screen.height / 2) - (height / 2);
   
-  window.open(
+  const popup = window.open(
     'https://webportal.teamdrive.net/',
     'TeamDriveUpload',
     `width=${width},height=${height},top=${top},left=${left},scrollbars=yes,resizable=yes`
   );
+  if (popup) popup.focus();
+};
+
+const openDetailsPopup = (url: string) => {
+  // Berechnet eine Größe, die um 75 % reduziert ist (entspricht 25 % der Originalgröße)
+  const width = window.screen.availWidth * 0.25;
+  const height = window.screen.availHeight * 0.25;
+  
+  // Zentriert das Fenster auf dem Bildschirm
+  const left = (window.screen.availWidth / 2) - (width / 2);
+  const top = (window.screen.availHeight / 2) - (height / 2);
+  
+  const popup = window.open(
+    url,
+    'ServiceDetails',
+    `width=${width},height=${height},top=${top},left=${left},scrollbars=yes,resizable=yes`
+  );
+  if (popup) popup.focus();
 };
 
 // --- Komponenten ---
@@ -148,9 +171,10 @@ const ModalOverlay = ({ isOpen, onClose, title, url }: { isOpen: boolean, onClos
 
 interface ServiceCardProps {
   title: string;
+  detailsUrl?: string;
 }
 
-const ServiceCard: React.FC<ServiceCardProps> = ({ title }) => (
+const ServiceCard: React.FC<ServiceCardProps> = ({ title, detailsUrl }) => (
   <div className="bg-slate-900/30 border border-slate-800/50 p-7 md:p-9 rounded-[2rem] backdrop-blur-md flex flex-col h-full hover:border-blue-500/50 hover:bg-slate-900/50 hover:-translate-y-2 transition-all duration-500 group relative overflow-hidden">
     {/* Subtiler Background-Glow */}
     <div className="absolute -top-24 -right-24 w-48 h-48 bg-blue-600/5 blur-[80px] group-hover:bg-blue-600/10 transition-all duration-500 rounded-full" />
@@ -167,8 +191,11 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ title }) => (
       </h4>
       
       <div className="mt-auto pt-6 border-t border-slate-800/50 flex flex-col sm:flex-row gap-3">
-        <button className="flex-1 py-3 px-4 text-[11px] font-bold uppercase tracking-wider bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white rounded-xl border border-white/5 transition-all">
-          Details
+        <button 
+          onClick={() => detailsUrl && openDetailsPopup(detailsUrl)}
+          className={`flex-1 py-3 px-4 text-[11px] font-bold uppercase tracking-wider rounded-xl border border-white/5 transition-all ${detailsUrl ? 'bg-white/15 hover:bg-white/25 text-white shadow-lg shadow-white/5 cursor-pointer' : 'bg-white/5 text-slate-500 cursor-not-allowed opacity-40'}`}
+        >
+          Info
         </button>
         <button className="flex-1 py-3 px-4 text-[11px] font-bold uppercase tracking-wider bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-500 hover:to-indigo-600 text-white rounded-xl shadow-lg shadow-blue-900/20 transition-all">
           Anfragen
@@ -184,7 +211,7 @@ interface ToolCardProps {
 }
 
 const ToolCard: React.FC<ToolCardProps> = ({ title, icon }) => (
-  <div className="bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 p-6 md:p-8 rounded-3xl flex flex-col h-full hover:shadow-[0_0_30px_rgba(56,189,248,0.15)] hover:border-sky-500/30 transition-all group">
+  <div className="bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 p-6 md:p-8 rounded-3xl flex flex-col h-full hover:shadow-[0_0_30px_rgba(56,189,248,0.15)] hover:border-sky-500/30 transition-all duration-300 group">
     <div className="w-12 h-12 rounded-2xl bg-sky-600/10 flex items-center justify-center mb-6 border border-sky-500/20 group-hover:bg-sky-600 group-hover:text-white transition-all text-sky-400">
       {icon}
     </div>
@@ -729,19 +756,22 @@ const App: React.FC = () => {
     if (isContactOpen) setIsContactOpen(false);
   }, [currentView]);
 
-  const services = [
-    "Verkehrswertgutachten zur Vorlage beim Finanzamt",
-    "Verkehrswertgutachten für Erbschaftsangelegenheiten & Nachfolgeplanung",
-    "Verkehrswertgutachten für Scheidung & Anteilsauseinandersetzung",
-    "Verkehrswertgutachten für Kauf & Verkauf",
-    "Verkehrswertgutachten für Betreuung & Nachlassverwaltung",
-    "Gutachten für die Mieterhöhung",
-    "Gutachterliche Stellungnahme zum Nachweis einer verkürzten Restnutzungsdauer",
-    "Verkehrswertgutachten für sonstige Zwecke",
-    "Strategieberatung für private Immobilienbesitzer",
-    "Strategieberatung für betrieblichen Immobilienbesitz (CREM)",
-    "Strategieberatung für landwirtschaftlichen Immobilienbesitz",
-    "Strategieberatung für die private Nachfolgeplanung"
+  const services: ServiceItem[] = [
+    { 
+      title: "Verkehrswertgutachten zur Vorlage beim Finanzamt", 
+      detailsUrl: "https://app.heygen.com/embedded-player/69a8f1ab69d24521be40c3459632dca2" 
+    },
+    { title: "Verkehrswertgutachten für Erbschaftsangelegenheiten & Nachfolgeplanung" },
+    { title: "Verkehrswertgutachten für Scheidung & Anteilsauseinandersetzung" },
+    { title: "Verkehrswertgutachten für Kauf & Verkauf" },
+    { title: "Verkehrswertgutachten für Betreuung & Nachlassverwaltung" },
+    { title: "Gutachten für die Mieterhöhung" },
+    { title: "Gutachterliche Stellungnahme zum Nachweis einer verkürzten Restnutzungsdauer" },
+    { title: "Verkehrswertgutachten für sonstige Zwecke" },
+    { title: "Strategieberatung für private Immobilienbesitzer" },
+    { title: "Strategieberatung für betrieblichen Immobilienbesitz (CREM)" },
+    { title: "Strategieberatung für landwirtschaftlichen Immobilienbesitz" },
+    { title: "Strategieberatung für die private Nachfolgeplanung" }
   ];
 
   const tools = [
@@ -801,7 +831,7 @@ const App: React.FC = () => {
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 max-w-7xl mx-auto">
                 {services.map((service, idx) => (
-                  <ServiceCard key={idx} title={service} />
+                  <ServiceCard key={idx} title={service.title} detailsUrl={service.detailsUrl} />
                 ))}
               </div>
             </div>
