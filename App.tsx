@@ -403,7 +403,12 @@ const UeberUnsPage = ({ setView }: { setView: (v: View) => void }) => {
   const expertiseFields: ExpertiseField[] = [
     { 
       title: "Öffentliche Bestellung und Vereidigung", 
-      text: "Die öffentliche Bestellung und Vereidigung ist ein staatlich geschütztes Gütesiegel, das eine überdurchschnittliche fachliche Expertise bescheinigt. Michael Kiefer wurde von der IHK für München und Oberbayern nach einem anspruchsvollen Prüvungsverfahren für das Fachgebiet der Immobilienbewertung berufen.\n\nEin Kernaspekt dieser Bestellung ist die absolute Neutralität und Objektivität. Als öffentlich bestellter und vereidigter Sachverständiger ist er gesetzlich dazu verpflichtet, Gutachten unparteiisch and nach bestem Wissen und Gewissen zu erstellen, was ein Höchstmaß an Verlässlichkeit garantiert.\n\nDie von uns erstellten Gutachten genießen bei Gerichten, Finanzämtern und Kreditinstituten eine besondere Glaubwürdigkeit. Sie bilden die rechtssichere Grundlage für Erbschaftsangelegenheiten, steuerliche Bewertungen oder gerichtliche Auseinandersetzungen.\n\nUm diesen hohen Standard dauerhaft zu sichern, unterliegen wir einer ständigen Aufsicht durch die Bestellungskörperschaft. Dies umfasst die regelmäßige Überprüfung der Gutachtenqualität sowie die Verpflichtung zu kontinuierlicher fachlicher Weiterbildung.",
+      items: [
+        { text: "Die öffentliche Bestellung und Vereidigung ist ein staatlich geschütztes Gütesiegel, das eine überdurchschnittliche fachliche Expertise bescheinigt. Michael Kiefer wurde von der IHK für München und Oberbayern nach einem anspruchsvollen Prüvungsverfahren für das Fachgebiet der Immobilienbewertung berufen." },
+        { text: "Ein Kernaspekt dieser Bestellung ist die absolute Neutralität und Objektivität. Als öffentlich bestellter und vereidigter Sachverständiger ist er gesetzlich dazu verpflichtet, Gutachten unparteiisch and nach bestem Wissen und Gewissen zu erstellen, was ein Höchstmaß an Verlässlichkeit garantiert." },
+        { text: "Die von uns erstellten Gutachten genießen bei Gerichten, Finanzämtern und Kreditinstituten eine besondere Glaubwürdigkeit. Sie bilden die rechtssichere Grundlage für Erbschaftsangelegenheiten, steuerliche Bewertungen oder gerichtliche Auseinandersetzungen." },
+        { text: "Um diesen hohen Standard dauerhaft zu sichern, unterliegen wir einer ständigen Aufsicht durch die Bestellungskörperschaft. Dies umfasst die regelmäßige Überprüfung der Gutachtenqualität sowie die Verpflichtung zu kontinuierlicher fachlicher Weiterbildung." }
+      ],
       ctaImage: "https://svv.ihk.de/blueprint/servlet/resource/crblob/5972434/2859fbc4e02a16c35663e5a6173c6c21/logo-svw-ohne-logos-data.png",
       ctaLink: "https://svv.ihk.de/svw-suche/4931566/suche-extern"
     },
@@ -433,7 +438,12 @@ const UeberUnsPage = ({ setView }: { setView: (v: View) => void }) => {
     { 
       title: "Aus- und Weiterbildung", 
       isHighlight: true,
-      text: "Qualitätssicherung durch lebenslanges Lernen:\n\nUnsere Gutachter unterliegen aufgrund ihrer Mitgliedschaften and Bestellungen einer strengen, kontinuierlichen Weiterbildungsverpflichtung.\n\nDurch regelmäßige interne Schulungen sowie hochkarätige externer Weiterbildung garantieren wir Ergebnisse auf höchstem fachlichem Niveau – stets aktuell, rechtssicher and am Puls der Marktentwicklung (Lifelong Learning).",
+      items: [
+        { text: "Qualitätssicherung durch lebenslanges Lernen als zentrales Versprechen unserer Sachverständigenkanzlei." },
+        { text: "Unsere Gutachter unterliegen aufgrund ihrer Mitgliedschaften und öffentlichen Bestellungen einer strengen, kontinuierlichen Weiterbildungsverpflichtung." },
+        { text: "Durch regelmäßige interne Schulungen sowie hochkarätige externe Fortbildungen garantieren wir Ergebnisse auf höchstem fachlichem Niveau." },
+        { text: "Stets aktuell, rechtssicher and am Puls der Marktentwicklung (Lifelong Learning) für verlässliche Immobilienwerte." }
+      ],
       footerLink: { text: "Wir bilden aus", url: "https://www.immokaufleute.de/" }
     }
   ];
@@ -583,7 +593,7 @@ const UeberUnsPage = ({ setView }: { setView: (v: View) => void }) => {
                   </div>
                 ) : (
                   field.text && field.text.split('\n\n').map((paragraph, pIdx) => (
-                    <p key={pIdx} className={`${field.isHighlight && pIdx === 0 ? 'text-blue-600 font-bold text-xl mb-8 border-b border-blue-900/20 pb-6' : 'text-blue-800 italic md:text-lg mb-6 last:mb-0'} leading-relaxed`}>
+                    <p key={pIdx} className={`${field.isHighlight && pIdx === 0 ? 'text-blue-600 font-bold text-xl mb-8 border-b border-blue-900/20 pb-6' : 'text-slate-300 md:text-lg mb-6 last:mb-0'} leading-relaxed`}>
                       {paragraph}
                     </p>
                   ))
@@ -610,19 +620,34 @@ const UeberUnsPage = ({ setView }: { setView: (v: View) => void }) => {
               )}
               
               {field.ctaImage && field.ctaLink && (
-                <div className="mt-8 pt-6 border-t border-slate-800/40 text-center">
+                <div className="mt-12 pt-8 border-t border-slate-800/60 text-center">
                   <a 
                     href={field.ctaLink} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="inline-block group/cta transition-transform hover:scale-105 active:scale-95"
+                    className="inline-flex flex-col items-center group/cta w-full"
                   >
-                    <div className="bg-white p-7 rounded-2xl shadow-xl border border-slate-200 hover:shadow-blue-500/20 transition-all">
+                    <div className="bg-white p-7 md:p-9 rounded-[2.5rem] shadow-2xl border border-slate-200 hover:shadow-blue-500/40 transition-all transform group-hover/cta:-translate-y-2 relative overflow-hidden mb-5 max-w-[280px]">
+                      {/* Subtiler Glanzeffekt auf dem Badge */}
+                      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-blue-500/5 to-transparent opacity-0 group-hover/cta:opacity-100 transition-opacity duration-700" />
+                      
                       <img 
                         src={field.ctaImage} 
                         alt="IHK Siegel" 
-                        className="h-24 md:h-32 w-auto object-contain brightness-100 transition-all group-hover/cta:brightness-110"
+                        className="h-20 md:h-24 w-auto object-contain brightness-100 transition-all relative z-10 mx-auto"
                       />
+                    </div>
+                    
+                    <div className="flex flex-col items-center gap-2">
+                      <span className="text-[11px] font-black uppercase tracking-[0.25em] text-blue-400 group-hover/cta:text-blue-300 transition-colors">
+                        Eintrag im IHK-Sachverständigenverzeichnis
+                      </span>
+                      <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest group-hover/cta:text-slate-400">
+                        <span>Offizielle Verifizierung prüfen</span>
+                        <svg className="w-4 h-4 transition-transform group-hover/cta:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                      </div>
                     </div>
                   </a>
                 </div>
