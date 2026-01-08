@@ -438,8 +438,8 @@ const UeberUnsPage = ({ setView }: { setView: (v: View) => void }) => {
     { 
       title: "Aus- und Weiterbildung", 
       isHighlight: true,
+      text: "Qualitätssicherung durch lebenslanges Lernen als zentrales Versprechen unserer Sachverständigenkanzlei:",
       items: [
-        { text: "Qualitätssicherung durch lebenslanges Lernen als zentrales Versprechen unserer Sachverständigenkanzlei." },
         { text: "Unsere Gutachter unterliegen aufgrund ihrer Mitgliedschaften und öffentlichen Bestellungen einer strengen, kontinuierlichen Weiterbildungsverpflichtung." },
         { text: "Durch regelmäßige interne Schulungen sowie hochkarätige externe Fortbildungen garantieren wir Ergebnisse auf höchstem fachlichem Niveau." },
         { text: "Stets aktuell, rechtssicher and am Puls der Marktentwicklung (Lifelong Learning) für verlässliche Immobilienwerte." }
@@ -557,8 +557,17 @@ const UeberUnsPage = ({ setView }: { setView: (v: View) => void }) => {
             <h3 className="text-xl font-bold text-white mb-6 group-hover:text-blue-400 transition-colors">{field.title}</h3>
             <div className={`bg-slate-950/50 rounded-2xl p-8 md:p-12 border ${field.isHighlight ? 'border-blue-900/20' : 'border-slate-800'} min-h-[500px] shadow-inner overflow-y-auto flex flex-col`}>
               <div className="flex-1">
-                {field.items ? (
-                  /* Liste für Items - Einspaltiges, optimiertes Layout */
+                {/* Überschrift / Einleitungstext */}
+                {field.text && (
+                  <div className="mb-10">
+                    <h4 className="text-xl md:text-2xl font-extrabold text-white leading-tight border-l-4 border-blue-600 pl-6">
+                      {field.text}
+                    </h4>
+                  </div>
+                )}
+                
+                {/* Liste für Items */}
+                {field.items && (
                   <div className="grid gap-4 grid-cols-1">
                     {field.items.map((item, iIdx) => {
                       const isLink = !!item.link;
@@ -591,12 +600,6 @@ const UeberUnsPage = ({ setView }: { setView: (v: View) => void }) => {
                       );
                     })}
                   </div>
-                ) : (
-                  field.text && field.text.split('\n\n').map((paragraph, pIdx) => (
-                    <p key={pIdx} className={`${field.isHighlight && pIdx === 0 ? 'text-blue-600 font-bold text-xl mb-8 border-b border-blue-900/20 pb-6' : 'text-slate-300 md:text-lg mb-6 last:mb-0'} leading-relaxed`}>
-                      {paragraph}
-                    </p>
-                  ))
                 )}
               </div>
               
